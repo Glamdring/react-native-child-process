@@ -1,6 +1,6 @@
 {
-  "name": "react-native-childprocess",
-  "version": "0.1.4",
+  "name": "react-native-child-process-exec",
+  "version": "0.1.5",
   "description": "Childprocess implemented",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -23,7 +23,7 @@
     "test": "jest",
     "typescript": "tsc --noEmit",
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "prepare": "bob build",
+    
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
