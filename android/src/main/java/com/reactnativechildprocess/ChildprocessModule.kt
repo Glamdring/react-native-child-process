@@ -20,10 +20,10 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
     // See https://facebook.github.io/react-native/docs/native-modules-android
     @ReactMethod
-    fun spawn(command: String, args: ReadableArray<String>, opts: Map<String, String>) {
+    fun spawn(command: String, args: ReadableArray, opts: Map<String, String>) {
       try {
 
-        val mutableList = arrayListOf<Int>()
+        val mutableList = arrayListOf<String>()
         mutableList.add(command)
         for (i in 0..args.size()) {
           mutableList.add(args.getString(i))
@@ -38,7 +38,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
           .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
           .emit("stdout", output)
       } catch (ex: Exception) {
-        Log.e("ChildprocessModule", ex.getMessage(), e)
+        Log.e("ChildprocessModule", ex.message, ex)
       }
     }
 
