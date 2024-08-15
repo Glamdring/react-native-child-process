@@ -3,6 +3,7 @@ package com.reactnativechildprocess
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.bridge.Promise
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import android.util.Log
@@ -19,18 +20,26 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
     // See https://facebook.github.io/react-native/docs/native-modules-android
     @ReactMethod
-    fun spawn(command: String, args: Array<String>, opts: Map<String, String>) {
-      val mutableList = args.toMutableList()
-      mutableList.add(0, command)
-      val params = mutableList.toTypedArray()
-      val process = Runtime.getRuntime().exec(params)
+    fun spawn(command: String, args: ReadableArray<String>, opts: Map<String, String>) {
+      try {
 
-      val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
-      process.waitFor(10, TimeUnit.SECONDS)
+        val mutableList = arrayListOf<Int>()
+        mutableList.add(command)
+        for (i in 0..args.size()) {
+          mutableList.add(args.getString(i))
+        }
+        val params = mutableList.toTypedArray()
+        val process = Runtime.getRuntime().exec(params)
 
-      getReactApplicationContext()
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit("stdout", output)
+        val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
+        process.waitFor(10, TimeUnit.SECONDS)
+
+        getReactApplicationContext()
+          .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+          .emit("stdout", output)
+      } catch (ex: Exception) {
+        Log.e("ChildprocessModule", ex.getMessage(), e)
+      }
     }
 
 

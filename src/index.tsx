@@ -39,17 +39,21 @@ export async function spawn(cmd: string, args?: string[], options?: SpawnOptions
 		pwd,
 	};
 
-	const cmdID = await Childprocess.spawn(cmd, args, opt);
-	subscriptions[cmdID] = {
-		stdout,
-		stderr,
-		terminate: function(payload){
-			removeSubscriptions(cmdID);
-			terminate && terminate(payload);
-		},
-	};
+  try {
+    const cmdID = await Childprocess.spawn(cmd, args, opt);
+    subscriptions[cmdID] = {
+      stdout,
+      stderr,
+      terminate: function(payload){
+        removeSubscriptions(cmdID);
+        terminate && terminate(payload);
+      },
+    };
 
-	return cmdID;
+    return cmdID;
+  } catch (ex) {
+    console.log(ex);
+  }
 }
 
 function removeSubscriptions(cmdID) {
