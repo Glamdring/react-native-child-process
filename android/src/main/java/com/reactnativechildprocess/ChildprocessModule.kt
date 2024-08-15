@@ -28,8 +28,8 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
       val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
       process.waitFor(10, TimeUnit.SECONDS)
 
-      reactContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class)
+      getReactApplicationContext()
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
             .emit("stdout", output)
     }
 
