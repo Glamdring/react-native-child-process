@@ -20,7 +20,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
     // See https://facebook.github.io/react-native/docs/native-modules-android
     @ReactMethod
-    fun spawn(command: String, args: ReadableArray, opts: Map<String, String>) {
+    fun spawn(command: String, args: ReadableArray, opts: ReadableMap) {
       try {
 
         val mutableList = arrayListOf<String>()
