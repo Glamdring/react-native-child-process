@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.ReadableArray
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.Promise
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import android.util.Log
@@ -25,7 +26,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
         val mutableList = arrayListOf<String>()
         mutableList.add(command)
-        for (i in 0..args.size()) {
+        for (i in 0..args.size() - 1) {
           mutableList.add(args.getString(i))
         }
         val params = mutableList.toTypedArray()
