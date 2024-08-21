@@ -5,6 +5,7 @@ interface SpawnOptions {
 	stdout?: (output: string) => void,
 	stderr?: (err: string) => void,
 	terminate?: (code: number) => void,
+  synchronous?: boolean,
 }
 
 const Childprocess = NativeModules.Childprocess;
@@ -34,23 +35,27 @@ export async function spawn(cmd: string, args?: string[], options?: SpawnOptions
 	if(options == undefined){
 		options = {};
 	}
-	const {pwd, stdout, stderr, terminate} = options;
+	const {pwd, stdout, stderr, terminate, synchronous} = options;
 	let opt = {
 		pwd,
 	};
 
   try {
-    const cmdID = await Childprocess.spawn(cmd, args, opt);
-    subscriptions[cmdID] = {
-      stdout,
-      stderr,
-      terminate: function(payload){
-        removeSubscriptions(cmdID);
-        terminate && terminate(payload);
-      },
-    };
+    if (options.synchronous) {
+      return await Childprocess.spawn(cmd, args, opt);
+    } else {
+      const cmdID = await Childprocess.spawn(cmd, args, opt);
+      subscriptions[cmdID] = {
+        stdout,
+        stderr,
+        terminate: function(payload){
+          removeSubscriptions(cmdID);
+          terminate && terminate(payload);
+        },
+      };
 
-    return cmdID;
+      return cmdID;    
+    }
   } catch (ex) {
     console.log(ex);
   }
