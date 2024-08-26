@@ -21,7 +21,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
     // See https://facebook.github.io/react-native/docs/native-modules-android
     @ReactMethod
-    fun spawn(command: String, args: ReadableArray, opts: ReadableMap): String? {
+    fun spawn(command: String, args: ReadableArray, opts: ReadableMap, promise: Promise) {
       try {
         val mutableList = arrayListOf<String>()
         mutableList.add(command)
@@ -29,6 +29,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
           mutableList.add(args.getString(i))
         }
         val params = mutableList.toTypedArray()
+        Log.i("ChildprocessModule", params)
         val process = Runtime.getRuntime().exec(params)
 
         val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
@@ -36,19 +37,10 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
         Log.i("ChildprocessModule", output)
 
-        if (false) { // TODO get 'synchrounous' from options
-          // TODO implement asynchronous
-          getReactApplicationContext()
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit("onOutput", output)
-
-          return ""
-        } else {
-          return output
-        }
+        promise.resolve(output)
       } catch (ex: Exception) {
         Log.e("ChildprocessModule", ex.message, ex)
-        return ex.message
+        promise.reject("Failed to run process", ex)
       }
     }
 
