@@ -29,7 +29,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
           mutableList.add(args.getString(i))
         }
         val params = mutableList.toTypedArray()
-        Log.i("ChildprocessModule", params)
+        Log.i("ChildprocessModule", params.toString())
         val process = Runtime.getRuntime().exec(params)
 
         val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
