@@ -34,7 +34,7 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
 
         val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
         if (opts.hasKey("timeout")) {
-          process.waitFor(opts.getInt("timeout"), TimeUnit.SECONDS)
+          process.waitFor(opts.getInt("timeout").toLong(), TimeUnit.SECONDS)
         } else {
           process.waitFor(10, TimeUnit.SECONDS)
         }
