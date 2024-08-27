@@ -33,7 +33,11 @@ class ChildprocessModule(reactContext: ReactApplicationContext) : ReactContextBa
         val process = Runtime.getRuntime().exec(params)
 
         val output = process.getInputStream().bufferedReader().use(BufferedReader::readText)
-        process.waitFor(5, TimeUnit.SECONDS)
+        if (opts.hasKey("timeout")) {
+          process.waitFor(opts.getInt("timeout"), TimeUnit.SECONDS)
+        } else {
+          process.waitFor(10, TimeUnit.SECONDS)
+        }
 
         Log.i("ChildprocessModule", output)
 

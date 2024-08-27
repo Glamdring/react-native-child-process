@@ -35,9 +35,10 @@ export async function spawn(cmd: string, args?: string[], options?: SpawnOptions
 	if(options == undefined){
 		options = {};
 	}
-	const {pwd, stdout, stderr, terminate, synchronous} = options;
+	const {pwd, stdout, stderr, terminate, synchronous, timeout} = options;
 	let opt = {
 		pwd,
+    timeout
 	};
 
   try {
